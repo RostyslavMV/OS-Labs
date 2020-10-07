@@ -10,27 +10,24 @@ import spos.lab1.demo.DoubleOps;
 @SpringBootApplication
 public class Main implements CommandLineRunner {
 
-    private static int argument;
-
     public static void main(String[] args) {
-        argument = Integer.parseInt(args[0]);
         SpringApplication.run(Main.class, args);
     }
 
 
     @Override
     public void run(String... args) {
-        FuncFClient client1 = new FuncFClient();
+        FuncFClient client = new FuncFClient();
         Double valueF;
+        client.startConnection("127.0.0.1", 5555);
         try {
-            valueF = DoubleOps.funcF(argument);
+            valueF = DoubleOps.funcF(client.getArgument());
         }
         catch (InterruptedException e){
             e.printStackTrace();
             return;
         }
-        client1.startConnection("127.0.0.1", 5555);
-        client1.sendFunctionResult(new FunctionResult("F",valueF));
-        client1.stopConnection();
+        client.sendFunctionResult(new FunctionResult("F",valueF));
+        client.stopConnection();
     }
 }

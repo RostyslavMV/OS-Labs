@@ -1,6 +1,7 @@
 package com.rmv.os.lab1.service;
 
 import com.rmv.os.lab1.Main;
+import lombok.Getter;
 
 import java.util.Scanner;
 
@@ -8,14 +9,18 @@ public class PauseService {
 
     private static final int MAX_TIME_MS = 15000;
 
+    @Getter
+    private static volatile boolean promptOpen;
+
     public static void end() {
+        Main.getResultServer().stop();
         Main.getProcessF().destroy();
         Main.getProcessG().destroy();
-        Main.getResultServer().stop();
         System.exit(0);
     }
 
     public static void startConsolePrompt() {
+        promptOpen = true;
         System.out.println("Cancellation Prompt:");
         System.out.println("(a) stop");
         System.out.println("(b) continue");
@@ -26,6 +31,7 @@ public class PauseService {
             if (userInput.equals("a") || userInput.equals("stop")) {
                 end();
             } else if (userInput.equals("b") || userInput.equals("continue")) {
+                promptOpen = false;
                 return;
             } else {
                 System.out.println("Invalid input");

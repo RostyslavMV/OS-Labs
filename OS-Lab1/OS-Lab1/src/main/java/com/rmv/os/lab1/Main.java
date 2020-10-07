@@ -9,6 +9,7 @@ import com.rmv.os.lab1.service.PauseService;
 import com.rmv.os.lab1.service.server.ResultServer;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 @SpringBootApplication
 public class Main {
@@ -23,12 +24,9 @@ public class Main {
     private static Process processG;
 
     public static void main(String[] args) {
-       // SpringApplication.run(Main.class, args);
-
         run();
     }
 
-  //  @Override
     public static void run(String... args) {
         resultServer = new ResultServer();
         resultServer.start(5555);
@@ -37,10 +35,14 @@ public class Main {
         thisProjectDir = thisProjectDir.substring(0, thisProjectDir.length() - 7);
         String pathF = thisProjectDir + "F-Func\\target\\F-Func-1.0-SNAPSHOT.jar";
         String pathG = thisProjectDir + "G-Func\\target\\G-Func-1.0-SNAPSHOT.jar";
-        ProcessBuilder processBuilderF = new ProcessBuilder("java", "-jar", pathF, "2");
-        ProcessBuilder processBuilderG = new ProcessBuilder("java", "-jar", pathG, "2");
 
-        long startingTime = System.nanoTime();
+        Scanner in = new Scanner(System.in);
+        int x = in.nextInt();
+        ResultServer.setArgument(x);
+
+        ProcessBuilder processBuilderF = new ProcessBuilder("java", "-jar", pathF);
+        ProcessBuilder processBuilderG = new ProcessBuilder("java", "-jar", pathG);
+
         new Thread(() -> {
             try {
                 Process funcF = processBuilderF.start();
@@ -59,11 +61,5 @@ public class Main {
         KeyService keyService = new KeyService();
         keyService.start();
 
-        endWithHangs();
-    }
-
-    private  static void endWithHangs() {
-        Results.printFunctionHangs();
-        PauseService.end();
     }
 }
