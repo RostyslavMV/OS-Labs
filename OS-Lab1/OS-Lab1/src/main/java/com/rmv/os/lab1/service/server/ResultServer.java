@@ -71,9 +71,11 @@ public class ResultServer {
                         if ((inputObject = in.readObject()) != null) {
                             inputResult = (FunctionResult) inputObject;
                             Results.resultsList.add(inputResult);
-                            if (Results.resultsList.size() == 2 || inputResult.getResult().equals(0.0)) {
-                                Results.printMin();
-                                break;
+                            synchronized (Results.resultsList){
+                                if (Results.resultsList.size() == 2 || inputResult.getResult().equals(0.0)) {
+                                    Results.printMin();
+                                    break;
+                                }
                             }
                         }
                     } catch (EOFException e) {
